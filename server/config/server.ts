@@ -65,6 +65,7 @@ export type ServerConfig = {
 
   challengeProvider: ProviderConfig;
   uploadProvider: ProviderConfig;
+  storeProvider: ProviderConfig;
 
   email?: {
     provider: ProviderConfig;
@@ -187,14 +188,14 @@ const defaultConfig: PartialDeep<ServerConfig> = {
   sponsors: [],
   homeContent: '',
   faviconUrl: 'https://redpwn.storage.googleapis.com/branding/rctf-favicon.ico',
-  divisions: {
-    open: 'Open'
-  },
   challengeProvider: {
     name: 'challenges/database'
   },
   uploadProvider: {
     name: 'uploads/local'
+  },
+  storeProvider: {
+    name: 'store/database'
   },
   proxy: {
     cloudflare: false,

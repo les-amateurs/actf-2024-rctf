@@ -238,6 +238,22 @@ export const responseList = {
   errorInternal: {
     status: 500,
     message: 'An internal error occurred.'
+  },
+  badItem: {
+    status: 404,
+    message: 'This item could not be not found.'
+  },
+  goodItems: {
+    status: 200,
+    message: 'The retrieval of items was successful.'
+  },
+  goodItemDelete: {
+    status: 200,
+    message: 'Item successfully deleted'
+  },
+  goodItemUpdate: {
+    status: 200,
+    message: 'Item successfully updated'
   }
 }
 

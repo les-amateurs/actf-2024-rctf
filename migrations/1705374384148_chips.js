@@ -1,11 +1,11 @@
 /* eslint-disable camelcase */
 
 exports.up = (pgm) => {
-  pgm.alterColumn('users', {
+  pgm.addColumns('users', {
     chips: { type: 'int', default: 0 }
   })
 }
 
 exports.down = (pgm) => {
-  pgm.dropColumns('users', 'chips')
+  pgm.dropColumns('users', ['chips'])
 }

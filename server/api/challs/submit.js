@@ -6,6 +6,7 @@ import config from '../../config/server'
 import * as timeouts from '../../cache/timeouts'
 import { v4 as uuidv4 } from 'uuid'
 import * as paranoia from '../../paranoia'
+import { getChallengeInfo } from '../../cache/leaderboard'
 
 export default {
   method: 'POST',
@@ -49,10 +50,13 @@ export default {
 
     const paranoiaReq = [user, req.ip, challengeid, submittedFlag, false]
 
-    req.log.info({
-      chall: challengeid,
-      flag: submittedFlag
-    }, 'flag submission attempt')
+    req.log.info(
+      {
+        chall: challengeid,
+        flag: submittedFlag
+      },
+      'flag submission attempt'
+    )
 
     if (!challenge) {
       return responses.badChallenge
@@ -66,14 +70,20 @@ export default {
     })
 
     if (!passRateLimit.ok) {
-      req.log.warn({
-        timeLeft: passRateLimit.timeLeft
-      }, 'flag submission rate limit exceeded')
+      req.log.warn(
+        {
+          timeLeft: passRateLimit.timeLeft
+        },
+        'flag submission rate limit exceeded'
+      )
 
       paranoia.submit(paranoiaReq)
-      return [responses.badRateLimit, {
-        timeLeft: passRateLimit.timeLeft
-      }]
+      return [
+        responses.badRateLimit,
+        {
+          timeLeft: passRateLimit.timeLeft
+        }
+      ]
     }
 
     const bufSubmittedFlag = Buffer.from(submittedFlag)
@@ -90,9 +100,23 @@ export default {
     }
 
     try {
-      await db.solves.newSolve({ id: uuidv4(), challengeid: challengeid, userid: uuid, createdat: new Date() })
+      await db.solves.newSolve({
+        id: uuidv4(),
+        challengeid: challengeid,
+        userid: uuid,
+        createdat: new Date()
+      })
       paranoiaReq.accepted = true
       paranoia.submit(paranoiaReq)
+
+      const { score, solves } = (
+        await getChallengeInfo({ ids: [challengeid] })
+      )[0]
+      if (solves === 0) {
+        db.users.addChips(uuid, score + 150)
+      } else {
+        db.users.addChips(uuid, score)
+      }
       return responses.goodFlag
     } catch (e) {
       if (e.constraint === 'uq') {

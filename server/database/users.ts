@@ -11,6 +11,7 @@ export interface User {
   division: keyof ServerConfig['divisions'];
   ctftimeId?: string;
   perms: number;
+  chips: number;
 }
 
 export const getAllUsers = (): Promise<Pick<User, 'id' | 'name' | 'division'>[]> => {
@@ -20,6 +21,11 @@ export const getAllUsers = (): Promise<Pick<User, 'id' | 'name' | 'division'>[]>
 
 export const getUserById = ({ id }: Pick<User, 'id'>): Promise<User | undefined> => {
   return db.query<User>('SELECT * FROM users WHERE id = $1', [id])
+    .then(res => res.rows[0])
+}
+
+export const addChips = (id: string, chips: number): Promise<User | undefined> => {
+  return db.query<User>('UPDATE users SET chips = chips + $1 WHERE id = $2', [chips, id])
     .then(res => res.rows[0])
 }
 
@@ -58,7 +64,7 @@ export const removeUserById = ({ id }: Pick<User, 'id'>): Promise<User | undefin
     .then(res => res.rows[0])
 }
 
-export const makeUser = ({ id, name, email, division, ctftimeId, perms }: User): Promise<User> => {
+export const makeUser = ({ id, name, email, division, ctftimeId, perms }: Omit<User, 'chips'>): Promise<User> => {
   if (config.email && config.divisionACLs && !util.restrict.divisionAllowed(email, division)) {
     throw new DivisionACLError()
   }
