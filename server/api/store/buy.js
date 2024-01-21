@@ -3,7 +3,7 @@ import { responses } from '../../responses'
 
 export default {
   method: 'POST',
-  path: '/store/:id/buy',
+  path: '/items/:id/buy',
   requireAuth: true,
   schema: {
     params: {

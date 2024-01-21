@@ -62,20 +62,19 @@ export const getEquippedItemByType = ({
 }
 
 export const equipPurchase = async ({
-  type,
   itemid,
   userid
 }: Pick<Purchase, 'type' | 'userid' | 'itemid'>): Promise<Purchase> => {
   // unequip all other items
   await db.query(
-    'UPDATE purchases SET equipped = false WHERE userid = $1 AND type = $2',
-    [userid, type]
+    'UPDATE purchases SET equipped = false WHERE userid = $1 AND type = (SELECT type FROM items WHERE id = $2) AND itemid != $2',
+    [userid, itemid]
   )
 
   return db
     .query<Purchase>(
-      'UPDATE purchases SET equipped = true WHERE userid = $1 AND itemid = $2 AND type = $3 RETURNING *',
-      [userid, itemid, type]
+      'UPDATE purchases SET equipped = NOT equipped WHERE userid = $1 AND itemid = $2 RETURNING *',
+      [userid, itemid]
     )
     .then((res) => res.rows[0])
 }

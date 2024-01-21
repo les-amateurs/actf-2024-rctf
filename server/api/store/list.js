@@ -3,7 +3,7 @@ import * as store from '../../store'
 
 export default {
   method: 'GET',
-  path: '/store',
+  path: '/items',
   requireAuth: true,
   handler: async () => {
     const items = store.getAllItems()

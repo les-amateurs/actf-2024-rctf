@@ -266,6 +266,14 @@ export const responseList = {
   badItemAlreadyOwned: {
     status: 409,
     message: 'Item already owned'
+  },
+  goodEquip: {
+    status: 200,
+    message: 'Item sucessfully (un)equipped'
+  },
+  badEquip: {
+    status: 404,
+    message: 'You don\'t own this item'
   }
 }
 
