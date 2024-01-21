@@ -45,24 +45,31 @@ const setLeaderboardScript = redisScript(
     divisionBoards[division] = {}
     divisionCounts[division] = 0
   end
-
-  local numUsers = #leaderboard / 4
+  
+  -- [id, name, division, currscore, items]
+  local numUsers = #leaderboard / 5
   for i = 1, numUsers do
-    local division = leaderboard[i * 4 - 1]
+    local division = leaderboard[i * 5 - 2]
     local divisionPosition = divisionCounts[division] + 1
     local divisionBoard = divisionBoards[division]
 
     divisionCounts[division] = divisionPosition
-    divisionBoard[divisionPosition * 3] = leaderboard[i * 4]
-    divisionBoard[divisionPosition * 3 - 1] = leaderboard[i * 4 - 2]
-    divisionBoard[divisionPosition * 3 - 2] = leaderboard[i * 4 - 3]
+    -- items
+    divisionBoard[divisionPosition * 4] = leaderboard[i * 5]
+    -- current sccore
+    divisionBoard[divisionPosition * 4 - 1] = leaderboard[i * 5 - 1]
+    -- name
+    divisionBoard[divisionPosition * 4 - 2] = leaderboard[i * 5 - 3]
+    -- id
+    divisionBoard[divisionPosition * 4 - 3] = leaderboard[i * 5 - 4]
 
-    globalBoard[i * 3] = leaderboard[i * 4]
-    globalBoard[i * 3 - 1] = leaderboard[i * 4 - 2]
-    globalBoard[i * 3 - 2] = leaderboard[i * 4 - 3]
+    globalBoard[i * 4] = leaderboard[i * 5]
+    globalBoard[i * 4 - 1] = leaderboard[i * 5 - 1]
+    globalBoard[i * 4 - 2] = leaderboard[i * 5 - 3]
+    globalBoard[i * 4 - 3] = leaderboard[i * 5 - 4]
 
-    positionKeys[i * 2] = leaderboard[i * 4] .. "," .. i .. "," .. divisionPosition
-    positionKeys[i * 2 - 1] = leaderboard[i * 4 - 3]
+    positionKeys[i * 2] = leaderboard[i * 5 - 1] .. "," .. i .. "," .. divisionPosition
+    positionKeys[i * 2 - 1] = leaderboard[i * 5 - 4]
   end
 
   redis.call("DEL", unpack(KEYS))
@@ -157,7 +164,7 @@ export const setLeaderboard = async ({
     })
     lbWithItems.push([
       ...info,
-      JSON.stringify({ url: font?.resourceUrl, name: font?.resourceName })
+      JSON.stringify({ font: { url: font?.resourceUrl, name: font?.resourceName } })
     ])
   }
 
@@ -165,7 +172,7 @@ export const setLeaderboard = async ({
     await setLeaderboardScript,
     keys.length,
     ...keys,
-    JSON.stringify(leaderboard.flat()),
+    JSON.stringify(lbWithItems.flat()),
     JSON.stringify(divisions),
     JSON.stringify(challengeInfo),
     leaderboardUpdate
@@ -199,13 +206,14 @@ export const getRange = async ({ start, end, division, all }) => {
     all ? -1 : end * 3 - 1
   )
   const result = []
-  for (let i = 0; i < redisResult.length - 1; i += 3) {
+  for (let i = 0; i < redisResult.length - 1; i += 4) {
     // format the flat redis list response into an array of arrays
     // i is the user id, i + 1 is the user name, i + 2 is the user score
     result.push({
       id: redisResult[i],
       name: redisResult[i + 1],
-      score: parseInt(redisResult[i + 2])
+      score: parseInt(redisResult[i + 2]),
+      items: JSON.parse(redisResult[i + 3])
     })
   }
   return {
@@ -294,11 +302,11 @@ export const getGraph = async ({ division, maxTeams }) => {
   const latest = parsed[1]
   const graphData = parsed[2]
   const result = []
-  for (let userIdx = 0; userIdx < latest.length / 3; userIdx++) {
+  for (let userIdx = 0; userIdx < latest.length / 4; userIdx++) {
     const points = [
       {
         time: lastUpdate,
-        score: parseInt(latest[userIdx * 3 + 2])
+        score: parseInt(latest[userIdx * 4 + 2])
       }
     ]
     const userPoints = graphData[userIdx]
@@ -310,8 +318,9 @@ export const getGraph = async ({ division, maxTeams }) => {
     }
     points.sort((a, b) => b.time - a.time)
     result.push({
-      id: latest[userIdx * 3],
-      name: latest[userIdx * 3 + 1],
+      id: latest[userIdx * 4],
+      name: latest[userIdx * 4 + 1],
+      items: JSON.parse(latest[userIdx * 4 + 3]),
       points
     })
   }
