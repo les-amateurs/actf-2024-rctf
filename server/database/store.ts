@@ -1,5 +1,6 @@
 import db from './db'
 import type { Item, Purchase } from '../store/types'
+import { User } from './users'
 
 export const getAllItems = (): Promise<Item[]> => {
   return db
@@ -33,17 +34,29 @@ export const getPurchasesByUserId = ({
   userid
 }: Pick<Purchase, 'userid'>): Promise<Purchase[]> => {
   return db
-    .query<Purchase[]>('SELECT * FROM purchases WHERE userid = $1', [userid])
-    .then((res) => res.rows[0])
+    .query<Purchase>('SELECT * FROM purchases WHERE userid = $1', [userid])
+    .then((res) => res.rows)
 }
 
 export const getEquippedItems = ({
   userid
-}: Pick<Purchase, 'userid'>): Promise<Purchase[]> => {
+}: Pick<Purchase, 'userid'>): Promise<Item[]> => {
   return db
-    .query<Purchase[]>(
-      'SELECT * FROM purchases WHERE userid = $1 AND equipped = 1',
+    .query<Item>(
+      'SELECT * FROM items WHERE id IN (SELECT itemid FROM purchases WHERE equipped = true AND userid = $1)',
       [userid]
+    )
+    .then((res) => res.rows)
+}
+
+export const getEquippedItemByType = ({
+  type,
+  userid
+}: Pick<Purchase, 'userid' | 'type'>): Promise<Item> => {
+  return db
+    .query<Item>(
+      'SELECT * FROM items WHERE id = (SELECT itemid FROM purchases WHERE equipped = true AND userid = $1 AND type = $2)',
+      [userid, type]
     )
     .then((res) => res.rows[0])
 }
@@ -55,13 +68,13 @@ export const equipPurchase = async ({
 }: Pick<Purchase, 'type' | 'userid' | 'itemid'>): Promise<Purchase> => {
   // unequip all other items
   await db.query(
-    'UPDATE purchases SET equipped = 0 WHERE userid = $1 AND type = $2',
+    'UPDATE purchases SET equipped = false WHERE userid = $1 AND type = $2',
     [userid, type]
   )
 
   return db
     .query<Purchase>(
-      'UPDATE purchases SET equipped = 1 WHERE userid = $1 AND itemid = $2 AND type = $3 RETURNING *',
+      'UPDATE purchases SET equipped = true WHERE userid = $1 AND itemid = $2 AND type = $3 RETURNING *',
       [userid, itemid, type]
     )
     .then((res) => res.rows[0])
@@ -84,7 +97,6 @@ export const upsertItem = async ({
   resourceUrl,
   resourceName
 }: Item): Promise<void> => {
-  console.log([id, type, price, name, description, resourceUrl, resourceName])
   await db.query(
     `INSERT INTO items VALUES($1, $2, $3, $4::item_type, $5, $6, $7)
       ON CONFLICT (id)
@@ -98,4 +110,31 @@ export const upsertItem = async ({
     `,
     [id, name, description, type, price, resourceUrl, resourceName]
   )
+}
+
+export const addChips = (
+  id: string,
+  chips: number
+): Promise<User | undefined> => {
+  return db
+    .query<User>('UPDATE users SET chips = chips + $1 WHERE id = $2', [
+      chips,
+      id
+    ])
+    .then((res) => res.rows[0])
+}
+
+export const buyItem = async (
+  userid: string,
+  item: Item
+): Promise<Purchase> => {
+  const purchase = await db
+    .query<Purchase>(
+      'INSERT INTO purchases (type, itemid, userid) VALUES ($1, $2, $3) RETURNING *',
+      [item.type, item.id, userid]
+    )
+    .then((res) => res.rows[0])
+  // is this, timing attack?
+  await addChips(userid, -item.price)
+  return purchase
 }

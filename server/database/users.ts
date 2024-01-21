@@ -24,11 +24,6 @@ export const getUserById = ({ id }: Pick<User, 'id'>): Promise<User | undefined>
     .then(res => res.rows[0])
 }
 
-export const addChips = (id: string, chips: number): Promise<User | undefined> => {
-  return db.query<User>('UPDATE users SET chips = chips + $1 WHERE id = $2', [chips, id])
-    .then(res => res.rows[0])
-}
-
 export const getUserByEmail = ({ email }: Pick<User, 'email'>): Promise<User | undefined> => {
   return db.query<User>('SELECT * FROM users WHERE email = $1', [email])
     .then(res => res.rows[0])

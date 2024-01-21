@@ -11,7 +11,7 @@ exports.up = (pgm) => {
   })
 
   pgm.createTable('purchases', {
-    id: { type: 'uuid', primaryKey: true },
+    id: { type: 'uuid', primaryKey: true, default: 'gen_random_uuid()' },
     type: { type: 'item_type', notNull: true },
     itemid: {
       type: 'string',

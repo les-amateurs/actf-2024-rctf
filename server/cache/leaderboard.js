@@ -1,6 +1,7 @@
 import { promisify } from 'util'
 import client from './client'
 import config from '../config/server'
+import * as db from '../database'
 
 const redisEvalsha = promisify(client.evalsha.bind(client))
 const redisHget = promisify(client.hget.bind(client))
@@ -26,7 +27,9 @@ const luaChunkCall = `
   end
 `
 
-const setLeaderboardScript = redisScript('load', `
+const setLeaderboardScript = redisScript(
+  'load',
+  `
   ${luaChunkCall}
 
   local leaderboard = cjson.decode(ARGV[1])
@@ -77,16 +80,22 @@ const setLeaderboardScript = redisScript('load', `
       end
     end
   end
-`)
+`
+)
 
-const getRangeScript = redisScript('load', `
+const getRangeScript = redisScript(
+  'load',
+  `
   local result = redis.call("LRANGE", KEYS[1], ARGV[1], ARGV[2])
   result[#result + 1] = redis.call("LLEN", KEYS[1])
   return result
-`)
+`
+)
 
 // this script is not compatible with redis cluster as it computes key names at runtime
-const getGraphScript = redisScript('load', `
+const getGraphScript = redisScript(
+  'load',
+  `
   local maxUsers = tonumber(ARGV[1])
   local latest = redis.call("LRANGE", KEYS[1], 0, maxUsers * 3 - 1)
   if #latest == 0 then
@@ -105,9 +114,12 @@ const getGraphScript = redisScript('load', `
     latest,
     users
   })
-`)
+`
+)
 
-const setGraphScript = redisScript('load', `
+const setGraphScript = redisScript(
+  'load',
+  `
   ${luaChunkCall}
 
   redis.call("SET", KEYS[1], ARGV[1])
@@ -115,9 +127,15 @@ const setGraphScript = redisScript('load', `
   for i = 1, #users do
     chunkCall("HSET", KEYS[i + 1], users[i])
   end
-`)
+`
+)
 
-export const setLeaderboard = async ({ challengeValues, solveAmount, leaderboard, leaderboardUpdate }) => {
+export const setLeaderboard = async ({
+  challengeValues,
+  solveAmount,
+  leaderboard,
+  leaderboardUpdate
+}) => {
   const divisions = Object.keys(config.divisions)
   const divisionKeys = divisions.map(getLeaderboardKey)
   const keys = [
@@ -131,6 +149,18 @@ export const setLeaderboard = async ({ challengeValues, solveAmount, leaderboard
   challengeValues.forEach((value, key) => {
     challengeInfo.push(key, `${value},${solveAmount.get(key)}`)
   })
+  const lbWithItems = []
+  for (const info of leaderboard) {
+    const font = await db.store.getEquippedItemByType({
+      userid: info[0],
+      type: 'font'
+    })
+    lbWithItems.push([
+      ...info,
+      JSON.stringify({ url: font?.resourceUrl, name: font?.resourceName })
+    ])
+  }
+
   await redisEvalsha(
     await setLeaderboardScript,
     keys.length,
@@ -157,7 +187,7 @@ export const getRange = async ({ start, end, division, all }) => {
   if (!all && start === end) {
     // zero-length query - get total only
     return {
-      total: await redisLlen(getLeaderboardKey(division)) / 3,
+      total: (await redisLlen(getLeaderboardKey(division))) / 3,
       leaderboard: []
     }
   }
@@ -265,10 +295,12 @@ export const getGraph = async ({ division, maxTeams }) => {
   const graphData = parsed[2]
   const result = []
   for (let userIdx = 0; userIdx < latest.length / 3; userIdx++) {
-    const points = [{
-      time: lastUpdate,
-      score: parseInt(latest[userIdx * 3 + 2])
-    }]
+    const points = [
+      {
+        time: lastUpdate,
+        score: parseInt(latest[userIdx * 3 + 2])
+      }
+    ]
     const userPoints = graphData[userIdx]
     for (let pointIdx = 0; pointIdx < userPoints.length; pointIdx += 2) {
       points.push({

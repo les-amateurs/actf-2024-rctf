@@ -254,6 +254,18 @@ export const responseList = {
   goodItemUpdate: {
     status: 200,
     message: 'Item successfully updated'
+  },
+  goodPurchase: {
+    status: 200,
+    message: 'Item successfully bought'
+  },
+  badPurchase: {
+    status: 402,
+    message: 'Too poor!'
+  },
+  badItemAlreadyOwned: {
+    status: 409,
+    message: 'Item already owned'
   }
 }
 

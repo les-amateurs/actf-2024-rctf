@@ -9,12 +9,12 @@ class DatabaseProvider extends EventEmitter implements Provider {
   private items: Item[] = []
   private purchases: Purchase[] = []
 
-  constructor() {
+  constructor () {
     super()
     void this.update()
   }
 
-  private async update(): Promise<void> {
+  private async update (): Promise<void> {
     try {
       const dbchallenges = await db.store.getAllItems()
 
@@ -27,11 +27,11 @@ class DatabaseProvider extends EventEmitter implements Provider {
     }
   }
 
-  forceUpdate(): void {
+  forceUpdate (): void {
     void this.update()
   }
 
-  async updateItem(item: Item): Promise<void> {
+  async updateItem (item: Item): Promise<void> {
     const originalData = await db.store.getItemById({
       id: item.id
     })
@@ -51,7 +51,7 @@ class DatabaseProvider extends EventEmitter implements Provider {
     void this.update()
   }
 
-  async deleteItem(id: string): Promise<void> {
+  async deleteItem (id: string): Promise<void> {
     await db.store.removeItemById({ id: id })
 
     void this.update()

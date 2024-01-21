@@ -2,7 +2,7 @@ import { deepCopy } from '../util'
 import { Item } from './types'
 
 const ItemDefaults: Item = {
-  id: 0,
+  id: '',
   name: '',
   description: '',
   price: 100,

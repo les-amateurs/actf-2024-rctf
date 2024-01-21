@@ -113,9 +113,9 @@ export default {
         await getChallengeInfo({ ids: [challengeid] })
       )[0]
       if (solves === 0) {
-        db.users.addChips(uuid, score + 150)
+        db.store.addChips(uuid, score + 150)
       } else {
-        db.users.addChips(uuid, score)
+        db.store.addChips(uuid, score)
       }
       return responses.goodFlag
     } catch (e) {

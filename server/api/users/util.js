@@ -58,6 +58,7 @@ export const getUserData = async ({ user }) => {
     score: score.score,
     globalPlace: score.globalPlace,
     divisionPlace: score.divisionPlace,
-    solves
+    solves,
+    equippedItems: await db.store.getEquippedItems({ userid: user.id })
   }
 }

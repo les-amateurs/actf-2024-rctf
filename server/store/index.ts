@@ -32,7 +32,7 @@ export function getAllItems (): Item[] {
   return items
 }
 
-export function getItem(id: string): Item | undefined {
+export function getItem (id: string): Item | undefined {
   return itemsMap.get(id)
 }
 

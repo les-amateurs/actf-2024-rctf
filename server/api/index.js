@@ -9,7 +9,8 @@ const routes = [
   ...require('./integrations/client').default,
   ...require('./users').default,
   ...require('./auth').default,
-  ...require('./admin').default
+  ...require('./admin').default,
+  ...require('./store').default
 ]
 
 const makeSendResponse = (res) => (responseKind, data = null) => {
