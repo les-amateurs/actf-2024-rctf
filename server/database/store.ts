@@ -30,20 +30,24 @@ export const newItem = ({
     .then((res) => res.rows[0])
 }
 
-export const getPurchasesByUserId = ({
+export const getItemIdsByUserId = ({
   userid
-}: Pick<Purchase, 'userid'>): Promise<Purchase[]> => {
+}: Pick<Purchase, 'userid'>): Promise<string[]> => {
   return db
-    .query<Purchase>('SELECT * FROM purchases WHERE userid = $1', [userid])
-    .then((res) => res.rows)
+    .query<{ itemid: string }>(
+      'SELECT itemid FROM purchases WHERE userid = $1',
+      [userid]
+    )
+    .then((res) => res.rows.map(e => e.itemid))
 }
 
+// TODO only return relavent info
 export const getEquippedItems = ({
   userid
 }: Pick<Purchase, 'userid'>): Promise<Item[]> => {
   return db
     .query<Item>(
-      'SELECT * FROM items WHERE id IN (SELECT itemid FROM purchases WHERE equipped = true AND userid = $1)',
+      'SELECT * FROM items WHERE id IN (SELECT itemid FROM purchases WHERE userid = $1 AND equipped = true)',
       [userid]
     )
     .then((res) => res.rows)

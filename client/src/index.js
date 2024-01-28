@@ -20,6 +20,7 @@ import CtftimeCallback from './routes/ctftime-callback'
 import AdminChallenges from './routes/admin/challs'
 
 import { ToastProvider } from './components/toast'
+import Items from './routes/items'
 
 function useTriggerRerender () {
   const setToggle = useState(false)[1]
@@ -47,6 +48,7 @@ function App ({ classes }) {
   const loggedInPaths = [
     <Profile key='profile' path='/profile' name='Profile' />,
     <Challenges key='challs' path='/challs' name='Challenges' />,
+    <Items key='items' path='/items' name='Items' />,
     <AdminChallenges key='adminChalls' path='/admin/challs' />
   ]
 
