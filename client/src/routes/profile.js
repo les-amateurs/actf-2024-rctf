@@ -509,6 +509,7 @@ const Profile = ({ uuid, classes }) => {
         <img
           src={equippedItems.background.resourceUrl}
           class={classes.background}
+          draggable={false}
         />
       )}
     </div>
@@ -552,7 +553,8 @@ export default withStyles(
       left: 0,
       height: '100%',
       width: '100%',
-      objectFit: 'cover'
+      objectFit: 'cover',
+      opacity: 0.5
     },
     errorCard: {
       background: '#2229'

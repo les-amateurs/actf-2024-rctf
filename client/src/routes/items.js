@@ -70,7 +70,7 @@ const Items = ({ classes }) => {
             setOwnedItems({
               ...ownedItems,
               equipped: [
-                ...ownedItems.equipped.filter((item) => item.type === itemType),
+                ...ownedItems.equipped.filter((item) => item.type !== itemType),
                 id
               ]
             })
@@ -78,11 +78,10 @@ const Items = ({ classes }) => {
           break
         case 'UNEQUIP':
           {
-            const itemType = itemsMap[id].type
             setOwnedItems({
               ...ownedItems,
               equipped: [
-                ...ownedItems.equipped.filter((item) => item.type === itemType)
+                ...ownedItems.equipped.filter((item) => item !== id)
               ]
             })
           }
