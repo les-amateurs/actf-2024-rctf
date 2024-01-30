@@ -13,7 +13,7 @@ export const getOwnItems = async () => {
   }
   return {
     data: {
-      equipped: data.equippedItems.map((item) => item.id),
+      equipped: Object.values(data.equippedItems).map((item) => item.id),
       items: data.items
     }
   }

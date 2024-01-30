@@ -1,11 +1,12 @@
 import withStyles from '../components/jss'
-import { useState, useCallback, useRef } from 'preact/hooks'
+import { useState, useCallback, useRef, useMemo } from 'preact/hooks'
 
 import { submitFlag, getSolves } from '../api/challenges'
 import { useToast } from './toast'
 import SolvesDialog from './solves-dialog'
 import Markdown from './markdown'
 import { buyItem, equipItem } from '../api/items'
+import { addFont } from '../util/items'
 
 const ExternalLink = (props) => <a {...props} target="_blank" />
 
@@ -20,6 +21,29 @@ const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
 
   const [error, setError] = useState(undefined)
   const hasError = error !== undefined
+  const Preview = useMemo(() => {
+    const init = async () => {
+      switch (item.type) {
+        case 'font':
+            addFont(item.id, item.resourceUrl);
+          break
+      }
+    }
+    init()
+
+    switch (item.type) {
+      case 'font':
+        return () => (
+          <p style={{ fontFamily: `font-${item.id}` }} class={`${classes.preview}`}>
+            This is how text will look on your profile
+          </p>
+        )
+      case 'background':
+        return () => (
+          <img src={item.resourceUrl} class={`${classes.preview} ${classes.previewImage}`}/>
+        )
+    }
+  }, [item])
 
   const handleSubmit = useCallback(
     (e) => {
@@ -29,7 +53,7 @@ const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
           if (error === undefined) {
             toast({ body: 'Item successfuly bought!' })
 
-            setItemStatus(item.id, "BUY")
+            setItemStatus(item.id, 'BUY')
           } else {
             toast({ body: error, type: 'error' })
           }
@@ -67,11 +91,7 @@ const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
             <div class="frame__subtitle u-no-margin">{item.type}</div>
           </div>
           <div class="col-6 u-no-padding u-text-right">
-            <div
-              class={`${classes.points}`}
-            >
-              {item.type}
-            </div>
+            <div class={`${classes.points}`}>{item.price} chips</div>
           </div>
         </div>
 
@@ -84,6 +104,8 @@ const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
             content={item.description}
             components={markdownComponents}
           />
+          <h6>Preview</h6>
+          {Preview && <Preview />}
         </div>
 
         <button
@@ -158,6 +180,13 @@ export default withStyles(
       '&:hover': {
         background: '#222'
       }
+    },
+    preview: {
+      fontSize: '1.5rem !important',
+      marginTop: '0.5rem'
+    },
+    previewImage: {
+      aspectRatio: '16 / 9'
     }
   },
   Problem

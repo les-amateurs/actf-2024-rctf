@@ -42,10 +42,10 @@ export function resetCache (): void {
 
 export async function updateItem (item: Item): Promise<void> {
   await provider.updateItem(item)
-  await publishChallUpdate()
+  // await publishChallUpdate()
 }
 
 export async function deleteItem (id: string): Promise<void> {
   await provider.deleteItem(id)
-  await publishChallUpdate()
+  // await publishChallUpdate()
 }

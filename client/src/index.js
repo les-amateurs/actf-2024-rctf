@@ -109,9 +109,10 @@ export default withStyles({
     minHeight: '100%',
     background: '#111',
     color: '#fff',
-    '& *:not(code):not(pre)': {
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Noto Sans", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol" !important'
-    },
+    // SCREW THE CONCEPQUNECESk
+    // '& *:not(code):not(pre)': {
+    //   fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Noto Sans", "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"!important'
+    // },
     '& pre.code': {
       padding: '10px',
       background: 'var(--cirrus-code-bg)',

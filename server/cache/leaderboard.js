@@ -164,7 +164,7 @@ export const setLeaderboard = async ({
     })
     lbWithItems.push([
       ...info,
-      JSON.stringify({ font: { url: font?.resourceUrl, name: font?.resourceName } })
+      JSON.stringify({ font: font ? { id: font.id, resourceUrl: font.resourceUrl } : null })
     ])
   }
 

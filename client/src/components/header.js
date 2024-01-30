@@ -23,7 +23,7 @@ function Header({ classes, paths }) {
   }, [])
 
   return (
-    <div class="tab-container tabs-center">
+    <div class={`tab-container tabs-center ${classes.root}`}>
       <ul class={classes.list}>
         {paths.map(({ props: { path, name } }) => (
           <Match key={name} path={path}>
@@ -49,6 +49,10 @@ function Header({ classes, paths }) {
 
 export default withStyles(
   {
+    root: {
+      background: '#111 !important',
+      zIndex: 30
+    },
     link: {
       '&:focus': {
         boxShadow: 'none',

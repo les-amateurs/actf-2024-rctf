@@ -1,5 +1,5 @@
 import db from './db'
-import type { Item, Purchase } from '../store/types'
+import type { Item, ItemType, Purchase } from '../store/types'
 import { User } from './users'
 
 export const getAllItems = (): Promise<Item[]> => {
@@ -44,13 +44,19 @@ export const getItemIdsByUserId = ({
 // TODO only return relavent info
 export const getEquippedItems = ({
   userid
-}: Pick<Purchase, 'userid'>): Promise<Item[]> => {
+}: Pick<Purchase, 'userid'>): Promise<{ [key in ItemType]?: Item }> => {
   return db
     .query<Item>(
       'SELECT * FROM items WHERE id IN (SELECT itemid FROM purchases WHERE userid = $1 AND equipped = true)',
       [userid]
     )
-    .then((res) => res.rows)
+    .then((res) => {
+      let map: { [key in ItemType]?: Item } = {}
+      for (const item of res.rows) {
+        map[item.type] = item
+      }
+      return map
+    })
 }
 
 export const getEquippedItemByType = ({
