@@ -554,7 +554,7 @@ export default withStyles(
       height: '100%',
       width: '100%',
       objectFit: 'cover',
-      opacity: 0.5
+      opacity: 0.7
     },
     errorCard: {
       background: '#2229'

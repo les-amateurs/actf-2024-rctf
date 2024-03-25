@@ -158,13 +158,19 @@ export const setLeaderboard = async ({
   })
   const lbWithItems = []
   for (const info of leaderboard) {
-    const font = await db.store.getEquippedItemByType({
+    
+    const items = await db.store.getEquippedItems({
       userid: info[0],
       type: 'font'
     })
+    
+    
     lbWithItems.push([
       ...info,
-      JSON.stringify({ font: font ? { id: font.id, resourceUrl: font.resourceUrl } : null })
+      JSON.stringify({
+        font: items?.font ? { id: items.font.id, resourceUrl: items.font.resourceUrl } : null,
+        background: items?.background ? { id: items.background.id, resourceUrl: items.background.resourceUrl } : null
+      })
     ])
   }
 

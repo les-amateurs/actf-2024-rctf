@@ -47,6 +47,31 @@ const Scoreboard = withStyles(
         overflow: 'hidden',
         whiteSpace: 'nowrap'
       }
+    },
+    row: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '0 1.5rem',
+      borderBottom: '1px solid rgba(219,219,219,.5)'
+    },
+    rankAndName: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1rem'
+    },
+    tableHeader: {
+      fontWeight: 'bold',
+      borderWidth: '2px',
+      padding: '0.25rem 1.5rem',
+      borderTop: '1px solid rgba(219,219,219,.5)'
+    },
+    background: {
+      height: '2.5rem',
+      maskImage: 'linear-gradient(to right, #0000, #fff, #fff, #fff, #0000)',
+      flexGrow: 1,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
     }
   },
   ({ classes }) => {
@@ -325,43 +350,47 @@ const Scoreboard = withStyles(
         <div class="col-6">
           <div class={`frame ${classes.frame} ${classes.tableFrame}`}>
             <div class="frame__body">
-              <table class={`table small ${classes.table}`}>
-                <thead>
-                  <tr>
-                    <th style="width: 3.5em">#</th>
-                    <th>Team</th>
-                    <th style="width: 5em">Points</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {scores.map(({ id, name, score, rank, items }) => {
-                    const isSelf = profile != null && profile.id === id
-
-                    return (
-                      <tr
-                        key={id}
-                        class={isSelf ? classes.selected : ''}
-                        ref={isSelf ? selfRow : null}
+              <div class={`${classes.row} ${classes.tableHeader}`}>
+                <span class={classes.rankAndName}>
+                  <span>#</span>
+                  <span>Team</span>
+                </span>
+                <span>Points</span>
+              </div>
+              {scores.map(({ id, name, score, rank, items }) => {
+                const isSelf = profile != null && profile.id === id
+                return (
+                  <div
+                    key={id}
+                    class={`${classes.row} ${isSelf ? classes.selected : ''}`}
+                    ref={isSelf ? selfRow : null}
+                  >
+                    <span class={classes.rankAndName}>
+                      {rank}
+                      <a
+                        href={`/profile/${id}`}
+                        style={{
+                          fontFamily: items?.font?.id
+                            ? `font-${items.font.id}`
+                            : null
+                        }}
                       >
-                        <td>{rank}</td>
-                        <td>
-                          <a
-                            href={`/profile/${id}`}
-                            style={{
-                              fontFamily: items?.font?.id
-                                ? `font-${items?.font?.id}`
-                                : null
-                            }}
-                          >
-                            {name}
-                          </a>
-                        </td>
-                        <td>{score}</td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
+                        {name}
+                      </a>
+                    </span>
+                    <div
+                      class={classes.background}
+                      style={{
+                        backgroundImage:
+                          items?.background &&
+                          `url(${items.background.resourceUrl})`,
+                        height: rank === 1 ? '7rem' : rank === 2 ? '4rem' : null
+                      }}
+                    />
+                    <span>{score}</span>
+                  </div>
+                )
+              })}
             </div>
             {totalItems > pageSize && (
               <Pagination
