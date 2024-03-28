@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.normalizeName = exports.normalizeEmail = void 0;
+function normalizeEmail(email) {
+    return email.trim().toLowerCase();
+}
+exports.normalizeEmail = normalizeEmail;
+function normalizeName(name) {
+    return name.trim();
+}
+exports.normalizeName = normalizeName;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibm9ybWFsaXplLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vc2VydmVyL3V0aWwvbm9ybWFsaXplLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7OztBQUFBLFNBQWdCLGNBQWMsQ0FBRSxLQUFhO0lBQzNDLE9BQU8sS0FBSyxDQUFDLElBQUksRUFBRSxDQUFDLFdBQVcsRUFBRSxDQUFBO0FBQ25DLENBQUM7QUFGRCx3Q0FFQztBQUVELFNBQWdCLGFBQWEsQ0FBRSxJQUFZO0lBQ3pDLE9BQU8sSUFBSSxDQUFDLElBQUksRUFBRSxDQUFBO0FBQ3BCLENBQUM7QUFGRCxzQ0FFQyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBmdW5jdGlvbiBub3JtYWxpemVFbWFpbCAoZW1haWw6IHN0cmluZyk6IHN0cmluZyB7XG4gIHJldHVybiBlbWFpbC50cmltKCkudG9Mb3dlckNhc2UoKVxufVxuXG5leHBvcnQgZnVuY3Rpb24gbm9ybWFsaXplTmFtZSAobmFtZTogc3RyaW5nKTogc3RyaW5nIHtcbiAgcmV0dXJuIG5hbWUudHJpbSgpXG59XG4iXX0=

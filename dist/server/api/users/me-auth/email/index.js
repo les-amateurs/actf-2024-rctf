@@ -1,0 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = [
+    require('./delete').default,
+    require('./put').default
+];
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi8uLi8uLi8uLi9zZXJ2ZXIvYXBpL3VzZXJzL21lLWF1dGgvZW1haWwvaW5kZXguanMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxrQkFBZTtJQUNiLE9BQU8sQ0FBQyxVQUFVLENBQUMsQ0FBQyxPQUFPO0lBQzNCLE9BQU8sQ0FBQyxPQUFPLENBQUMsQ0FBQyxPQUFPO0NBQ3pCLENBQUEiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnQgZGVmYXVsdCBbXG4gIHJlcXVpcmUoJy4vZGVsZXRlJykuZGVmYXVsdCxcbiAgcmVxdWlyZSgnLi9wdXQnKS5kZWZhdWx0XG5dXG4iXX0=

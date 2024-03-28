@@ -1,0 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.DivisionACLError = void 0;
+class DivisionACLError extends Error {
+}
+exports.DivisionACLError = DivisionACLError;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9zZXJ2ZXIvZXJyb3JzL2luZGV4LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7OztBQUFBLE1BQWEsZ0JBQWlCLFNBQVEsS0FBSztDQUFHO0FBQTlDLDRDQUE4QyIsInNvdXJjZXNDb250ZW50IjpbImV4cG9ydCBjbGFzcyBEaXZpc2lvbkFDTEVycm9yIGV4dGVuZHMgRXJyb3Ige31cbiJdfQ==

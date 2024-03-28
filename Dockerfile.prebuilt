@@ -1,0 +1,6 @@
+FROM node:12.16.3-buster-slim AS run
+WORKDIR /app
+
+COPY . .
+
+CMD ["node", "--enable-source-maps", "--unhandled-rejections=strict", "/app/dist/server/index.js"]
