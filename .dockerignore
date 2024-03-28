@@ -4,7 +4,8 @@ yarn-error.log*
 
 /node_modules
 
-/dist
+# just for prebuilt
+# /dist
 /.env
 /data
 /conf.d/*

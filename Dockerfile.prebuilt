@@ -2,6 +2,6 @@ FROM node:12.16.3-buster-slim AS run
 WORKDIR /app
 
 COPY . .
-COPY ./dist /app/dist
+# COPY ./dist /app/dist
 
 CMD ["node", "--enable-source-maps", "--unhandled-rejections=strict", "/app/dist/server/index.js"]
