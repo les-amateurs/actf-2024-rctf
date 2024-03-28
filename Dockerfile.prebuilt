@@ -2,6 +2,10 @@ FROM node:12.16.3-buster-slim AS run
 WORKDIR /app
 
 COPY . .
+
+ENV NODE_ENV production
+RUN yarn install --prod --frozen-lockfile && yarn cache clean
+
 # COPY ./dist /app/dist
 
 CMD ["node", "--enable-source-maps", "--unhandled-rejections=strict", "/app/dist/server/index.js"]
