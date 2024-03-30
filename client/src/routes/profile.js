@@ -533,8 +533,9 @@ export default withStyles(
         background: '#111',
         color: '#fff !important'
       },
-      '& *': {
-        fontFamily: 'inherit'
+      // i very much like css bullcrap
+      '& *:not([data-bull]):not([data-crap])': {
+        fontFamily: 'inherit !important'
       }
     },
     col: {
