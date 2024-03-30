@@ -96,11 +96,6 @@ const Items = ({ classes }) => {
       <div class="col-3">
         <div class={`frame ${classes.frame}`}>
           <div class="frame__body">
-            <div class="frame__title title">Filters</div>
-          </div>
-        </div>
-        <div class={`frame ${classes.frame}`}>
-          <div class="frame__body">
             <div class="frame__title title">Equipped</div>
             <ul class={`${classes.equipped}`}>
               {ownedItems.equipped.map((i) => (

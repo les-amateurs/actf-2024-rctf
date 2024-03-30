@@ -468,6 +468,7 @@ const Profile = ({ uuid, classes }) => {
           ? `font-${equippedItems.font?.id}`
           : null
       }}
+      data-custom-font
     >
       {isPrivate && (
         <div class={classes.privateCol}>

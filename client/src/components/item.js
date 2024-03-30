@@ -8,7 +8,7 @@ import Markdown from './markdown'
 import { buyItem, equipItem } from '../api/items'
 import { addFont } from '../util/items'
 
-const ExternalLink = (props) => <a {...props} target="_blank" />
+const ExternalLink = (props) => <a {...props} target='_blank' />
 
 const markdownComponents = {
   A: ExternalLink
@@ -16,7 +16,7 @@ const markdownComponents = {
 
 const solvesPageSize = 10
 
-const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
+const Item = ({ classes, item, owned, equipped, setItemStatus }) => {
   const { toast } = useToast()
 
   const [error, setError] = useState(undefined)
@@ -25,7 +25,7 @@ const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
     const init = async () => {
       switch (item.type) {
         case 'font':
-            addFont(item.id, item.resourceUrl);
+          addFont(item.id, item.resourceUrl)
           break
       }
     }
@@ -34,7 +34,7 @@ const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
     switch (item.type) {
       case 'font':
         return () => (
-          <p style={{ fontFamily: `font-${item.id}` }} class={`${classes.preview}`}>
+          <p style={{ fontFamily: `font-${item.id}` }} class={`${classes.preview}`} data-custom-font>
             This is how text will look on your profile
           </p>
         )
@@ -84,18 +84,18 @@ const Problem = ({ classes, item, owned, equipped, setItemStatus }) => {
   )
   return (
     <div class={`frame ${classes.frame}`}>
-      <div class="frame__body">
-        <div class="row u-no-padding">
-          <div class="col-6 u-no-padding">
-            <div class="frame__title title">{item.name}</div>
-            <div class="frame__subtitle u-no-margin">{item.type}</div>
+      <div class='frame__body'>
+        <div class='row u-no-padding'>
+          <div class='col-6 u-no-padding'>
+            <div class='frame__title title'>{item.name}</div>
+            <div class='frame__subtitle u-no-margin'>{item.type}</div>
           </div>
-          <div class="col-6 u-no-padding u-text-right">
+          <div class='col-6 u-no-padding u-text-right'>
             <div class={`${classes.points}`}>{item.price} chips</div>
           </div>
         </div>
 
-        <div class="content-no-padding u-center">
+        <div class='content-no-padding u-center'>
           <div class={`divider ${classes.divider}`} />
         </div>
 
@@ -189,5 +189,5 @@ export default withStyles(
       aspectRatio: '16 / 9'
     }
   },
-  Problem
+  Item
 )

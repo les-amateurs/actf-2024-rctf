@@ -374,6 +374,7 @@ const Scoreboard = withStyles(
                             ? `font-${items.font.id}`
                             : null
                         }}
+                        data-custom-font
                       >
                         {name}
                       </a>

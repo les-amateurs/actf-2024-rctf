@@ -42,7 +42,7 @@ function Header({ classes, paths }) {
           </li>
         )}
       </ul>
-      <div class={classes.chips}>{chips} chips and dollarroounies borthera</div>
+      {chips && <div class={classes.chips}>{chips} chips</div>}
     </div>
   )
 }
