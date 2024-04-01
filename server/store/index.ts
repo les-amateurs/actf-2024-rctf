@@ -49,3 +49,10 @@ export async function deleteItem (id: string): Promise<void> {
   await provider.deleteItem(id)
   // await publishChallUpdate()
 }
+
+export function setupPeriodicItemCacheCleanTask(){
+  console.log("Starting periodic store refresh task...");
+  setInterval(async function () {
+    resetCache();
+  }, 60 * 1000);
+}

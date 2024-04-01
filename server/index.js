@@ -1,6 +1,7 @@
 import 'dotenv/config'
 
 import config from './config/server'
+import { setupPeriodicItemCacheCleanTask } from './store'
 
 const runMigrations = async () => {
   const { default: migrate } = await import('./database/migrate')
@@ -11,6 +12,8 @@ const runMain = async () => {
   const { subscribeChallUpdate } = await import('./cache/challs')
 
   await subscribeChallUpdate()
+
+  await setupPeriodicItemCacheCleanTask();
 
   if (config.instanceType === 'frontend' || config.instanceType === 'all') {
     const port = process.env.PORT || 3000
