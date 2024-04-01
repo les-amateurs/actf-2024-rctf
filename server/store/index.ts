@@ -51,7 +51,7 @@ export async function deleteItem (id: string): Promise<void> {
 }
 
 export function setupPeriodicItemCacheCleanTask(){
-  console.log("Starting periodic store refresh task...");
+  console.log("Starting periodic items refresh task...");
   setInterval(async function () {
     resetCache();
   }, 60 * 1000);
