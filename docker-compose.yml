@@ -25,7 +25,8 @@ services:
     volumes:
       - ./data/rctf-redis:/data
   postgres:
-    image: postgres:12.3
+  # Note: postgres version is newer than stable rctf, proceed with caution if you already have data in an older version. 
+    image: postgres:16.1
     restart: always
     environment:
       - POSTGRES_PASSWORD=${RCTF_DATABASE_PASSWORD}
