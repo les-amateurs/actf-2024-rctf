@@ -1,5 +1,6 @@
 exports.up = (pgm) => {
-  pgm.createExtension("uuid-ossp", {ifNotExists: true});
+  pgm.createExtension("uuid-ossp", {ifNotExists: true}) // required for uuid_generate_v4
+  pgm.createExtension("pgcrypto", {ifNotExists: true}) // required for gen_random_uuid
   pgm.createType('item_type', ['font', 'background', 'line_style', 'misc'])
   pgm.createTable('items', {
     id: { type: 'string', primaryKey: true },
@@ -44,4 +45,5 @@ exports.down = (pgm) => {
   pgm.dropTable('items')
   pgm.dropType('item_type')
   pgm.dropExtension("uuid-ossp")
+  // TODO: should I drop pgcrypto? I kind of feel like we don't want to in case of conflicts with other stuff mb?
 }
