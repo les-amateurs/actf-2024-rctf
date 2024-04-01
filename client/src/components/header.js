@@ -8,7 +8,7 @@ function Header({ classes, paths }) {
   const loggedIn = localStorage.getItem('token') !== null
   // TODO taking the quick and dirty solution here :))))))))
   // if this is unacceptable for reasons, we should turn this into a provider
-  const [chips, setChips] = useState()
+  const [chips, setChips] = useState(null)
   useEffect(() => {
     const action = async () => {
       const { data, error } = await privateProfile()
@@ -43,7 +43,7 @@ function Header({ classes, paths }) {
           </li>
         )}
       </ul>
-      {chips && <div class={classes.chips}>{chips} chips</div>}
+      {chips !== null && <div class={classes.chips}>{chips} chips</div>}
     </div>
   )
 }
