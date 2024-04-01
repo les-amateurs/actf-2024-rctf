@@ -74,6 +74,8 @@ export default async (fastify) => {
           sendResponse(responses.badToken)
           return
         }
+        req.log.info("AUTH HEADER CHECKING",authHeader,req.url, route.requireAuth, route);
+        console.warn("AUTH HEADER CHECKING (CONSOLE) ",authHeader,req.url, route, route.requireAuth);
         const uuid = await auth.token.getData(auth.token.tokenKinds.auth, authHeader.slice('Bearer '.length))
         if (uuid === null) {
           sendResponse(responses.badToken)
@@ -84,6 +86,7 @@ export default async (fastify) => {
           id: uuid
         })
         if (!user) {
+          req.log.warn("Token of nonexistent user attempted to be used");
           sendResponse(responses.badToken)
           return
         }

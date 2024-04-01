@@ -105,13 +105,17 @@ const decryptToken = async <Kind extends tokenKinds>(token: Token): Promise<Inte
 export const getData = async <Kind extends tokenKinds>(expectedTokenKind: Kind, token: Token): Promise<TokenDataTypes[Kind] | null> => {
   const content = await decryptToken<Kind>(token)
   if (content === null) {
+    // console.warn("No content in token? This may indicate tampering.",token);
+    // console.trace();
     return null
   }
   const { k: kind, t: createdAt, d: data } = content
   if (kind !== expectedTokenKind) {
+    // console.warn("Token type mismatch? Someone may be trying to do something nasty");
     return null
   }
   if (createdAt + tokenExpiries[kind] < timeNow()) {
+    // console.warn("Token expired");
     return null
   }
   return data

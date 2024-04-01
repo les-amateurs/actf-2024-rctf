@@ -35,6 +35,8 @@ export default {
     } else {
       const uuid = await auth.token.getData(auth.token.tokenKinds.team, req.body.teamToken)
       if (uuid === null) {
+        // req.log.warn("got uuid none");
+        // console.warn("got uuid as null from db");
         return responses.badTokenVerification
       }
       user = await database.users.getUserById({ id: uuid })

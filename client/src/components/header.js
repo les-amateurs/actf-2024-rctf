@@ -19,7 +19,8 @@ function Header({ classes, paths }) {
 
       setChips(data.chips)
     }
-    action()
+    // BUGFIX: this fixes getting redirected before verify can finish?
+    if(localStorage.getItem('token') !== null) action() // this did not cause a several hour headache
   }, [])
 
   return (

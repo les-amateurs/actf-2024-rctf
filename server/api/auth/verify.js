@@ -21,10 +21,14 @@ export default {
   handler: async ({ req }) => {
     const tokenData = await auth.token.getData(auth.token.tokenKinds.verify, req.body.verifyToken)
     if (tokenData === null) {
+      // req.log.warn("token data decoded to null");
+      // console.warn("token data decoded null (console)");
       return responses.badTokenVerification
     }
     const tokenUnused = await cache.login.useLogin({ id: tokenData.verifyId })
     if (!tokenUnused) {
+      // req.log.warn("token data decoded to unused");
+      // console.warn("token data decoded unused (console)");
       return responses.badTokenVerification
     }
 
