@@ -1,4 +1,5 @@
 exports.up = (pgm) => {
+  pgm.createExtension("uuid-ossp", {ifNotExists: true});
   pgm.createType('item_type', ['font', 'background', 'line_style', 'misc'])
   pgm.createTable('items', {
     id: { type: 'string', primaryKey: true },
@@ -33,6 +34,8 @@ exports.up = (pgm) => {
   pgm.addConstraint('purchases', 'already_owned', {
     unique: ['itemid', 'userid']
   })
+
+  
 }
 
 exports.down = (pgm) => {
@@ -40,4 +43,5 @@ exports.down = (pgm) => {
   pgm.dropTable('purchases')
   pgm.dropTable('items')
   pgm.dropType('item_type')
+  pgm.dropExtension("uuid-ossp")
 }
