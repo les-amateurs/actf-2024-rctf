@@ -186,7 +186,8 @@ export default withStyles(
       marginTop: '0.5rem'
     },
     previewImage: {
-      aspectRatio: '16 / 9'
+      // disable temporarily because I apparently had some non 16:9 images
+    //  aspectRatio: '16 / 9'
     }
   },
   Item
