@@ -7,25 +7,34 @@ interface S3ProviderOptions {
   bucketName: string;
   accessKeyId: string;
   secretAccessKey: string;
+  overridePublicHost: string | null;
 }
 
 export default class S3Provider implements Provider {
   private s3: AWS.S3
   private bucketName: string
+  opts: Partial<S3ProviderOptions> = {};
 
   constructor (_options: Partial<S3ProviderOptions>) {
     const options: Required<S3ProviderOptions> = {
       endpoint: _options.endpoint || process.env.RCTF_S3_ENDPOINT as string,
       bucketName: _options.bucketName || process.env.RCTF_S3_BUCKET as string,
       accessKeyId: _options.accessKeyId || process.env.RCTF_S3_ACCESS_KEY_ID as string,
-      secretAccessKey: _options.secretAccessKey || process.env.RCTF_S3_SECRET_ACCESS_KEY as string
+      secretAccessKey: _options.secretAccessKey || process.env.RCTF_S3_SECRET_ACCESS_KEY as string,
+      overridePublicHost: _options.overridePublicHost || process.env.RCTF_S3_OVERRIDE_PUBLIC_HOST as string,
     }
+
+    console.log(options);
 
     this.s3 = new AWS.S3({
       endpoint: options.endpoint,
       accessKeyId: options.accessKeyId,
       secretAccessKey: options.secretAccessKey
     });
+
+    this.opts = options;
+
+    console.log("Setup S3 support using endpoint at",this.opts.endpoint);
     
     this.bucketName = options.bucketName
   }
@@ -36,6 +45,7 @@ export default class S3Provider implements Provider {
 
   upload = async (data: Buffer, name: string): Promise<string> => {
     const hash = crypto.createHash('sha256').update(data).digest('hex')
+    console.log("Uploading", name, " to S3 storage");
     const key = this.getS3Key(hash, name)
 
     const params = {
@@ -46,13 +56,19 @@ export default class S3Provider implements Provider {
       ContentDisposition: 'download'
     }
 
-    await this.s3.upload(params).promise()
+    await this.s3.upload(params).promise();
+
+    console.log("Uploaded",name, " to S3 storage");
 
     return this.toUrl(hash, name)
   }
 
   private toUrl (sha256: string, name: string): string {
-    return `https://${this.bucketName}.${process.env.RCTF_S3_ENDPOINT}/uploads/${sha256}/${encodeURIComponent(name)}`
+    let host = `${this.bucketName}.${this.opts.endpoint}`;
+    if(this.opts.overridePublicHost){
+      host = this.opts.overridePublicHost;
+    }
+    return `https://${host}/uploads/${sha256}/${encodeURIComponent(name)}`
   }
 
   async getUrl (sha256: string, name: string): Promise<string|null> {
