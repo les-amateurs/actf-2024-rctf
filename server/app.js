@@ -40,11 +40,12 @@ app.register(helmet, {
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ['\'none\''],
-      styleSrc: ['\'unsafe-inline\'', '\'self\''],
+      styleSrc: ['\'unsafe-inline\'', '\'self\'', 'https://storage.amateurs.team'],
       scriptSrc: ['\'self\'', 'https://www.google-analytics.com', 'https://www.google.com/recaptcha/', 'https://www.gstatic.com/recaptcha/'],
       frameSrc: ['https://www.google.com/recaptcha/'],
       connectSrc: ['\'self\'', 'https://www.google-analytics.com'],
-      imgSrc: ['*', 'data:']
+      imgSrc: ['*', 'data:'],
+      fontSrc: ['*']
     }
   }
 })
